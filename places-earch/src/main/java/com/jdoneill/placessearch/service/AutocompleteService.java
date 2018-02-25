@@ -14,17 +14,17 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 
-public class PlaceSearchService{
+public class AutocompleteService {
     static final String BASE_URL = "https://maps.googleapis.com/maps/";
 
-    public interface PlaceSearchApi {
+    public interface AutomcompleteAPI {
 
         @GET("api/place/autocomplete/json")
         Call<Prediction> getPredictions(@Query("key") String apikey, @Query("input") String input, @Query("location") String location, @Query("radius") String radius);
 
     }
 
-    public PlaceSearchApi getAPI(){
+    public AutomcompleteAPI getAPI(){
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS);
 
@@ -39,7 +39,7 @@ public class PlaceSearchService{
                 .client(client)
                 .build();
 
-        return retrofit.create(PlaceSearchApi.class);
+        return retrofit.create(AutomcompleteAPI.class);
     }
 }
 

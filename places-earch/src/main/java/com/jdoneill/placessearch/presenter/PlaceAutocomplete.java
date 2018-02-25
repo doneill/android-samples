@@ -4,28 +4,28 @@ import android.content.Context;
 
 import com.jdoneill.placessearch.BuildConfig;
 import com.jdoneill.placessearch.model.Prediction;
-import com.jdoneill.placessearch.service.PlaceSearchService;
+import com.jdoneill.placessearch.service.AutocompleteService;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PlaceSearchPresenter {
+public class PlaceAutocomplete {
     static final String APIKEY = BuildConfig.API_KEY;
 
     private final Context context;
     private final PredictionsListener mListener;
-    private final PlaceSearchService placeSearchService;
+    private final AutocompleteService autocompleteService;
 
 
-    public PlaceSearchPresenter(PredictionsListener listener, Context context){
+    public PlaceAutocomplete(PredictionsListener listener, Context context){
         this.mListener = listener;
         this.context = context;
-        this.placeSearchService = new PlaceSearchService();
+        this.autocompleteService = new AutocompleteService();
     }
 
     public void getPredictions(){
-        placeSearchService
+        autocompleteService
                 .getAPI()
                 .getPredictions(APIKEY, "Safeway", "47.498277,-121.783975", "500")
                 .enqueue(new Callback<Prediction>() {

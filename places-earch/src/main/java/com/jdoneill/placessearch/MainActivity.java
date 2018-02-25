@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.jdoneill.placessearch.model.Predictions;
-import com.jdoneill.placessearch.presenter.PlaceSearchPresenter;
+import com.jdoneill.placessearch.presenter.PlaceAutocomplete;
 import com.jdoneill.placessearch.presenter.PredictionsListener;
 
 import java.util.List;
@@ -13,15 +13,15 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PredictionsListener {
 
-    private PlaceSearchPresenter placeSearchPresenter;
+    private PlaceAutocomplete placeAutocomplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        placeSearchPresenter = new PlaceSearchPresenter(this, this);
-        placeSearchPresenter.getPredictions();
+        placeAutocomplete = new PlaceAutocomplete(this, this);
+        placeAutocomplete.getPredictions();
 
     }
 
