@@ -6,11 +6,12 @@ import android.util.Log;
 
 import com.jdoneill.placessearch.model.Predictions;
 import com.jdoneill.placessearch.presenter.PlaceSearchPresenter;
+import com.jdoneill.placessearch.presenter.PredictionsListener;
 
 import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity implements PlaceSearchPresenter.PlaceSearchPresenterListener{
+public class MainActivity extends AppCompatActivity implements PredictionsListener {
 
     private PlaceSearchPresenter placeSearchPresenter;
 
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements PlaceSearchPresen
     }
 
     @Override
-    public void placeSearchReady(List<Predictions> predictions) {
+    public void getPredictionsList(List<Predictions> predictions) {
         for(Predictions p : predictions){
             Log.d("Places", "Place: " + p.getStructuredFormatting().getMainText());
             Log.d("Places", "Description: " + p.getDescription());

@@ -4,10 +4,7 @@ import android.content.Context;
 
 import com.jdoneill.placessearch.BuildConfig;
 import com.jdoneill.placessearch.model.Prediction;
-import com.jdoneill.placessearch.model.Predictions;
 import com.jdoneill.placessearch.service.PlaceSearchService;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,15 +14,15 @@ public class PlaceSearchPresenter {
     static final String APIKEY = BuildConfig.API_KEY;
 
     private final Context context;
-    private final PlaceSearchPresenterListener mListener;
+    private final PredictionsListener mListener;
     private final PlaceSearchService placeSearchService;
 
 
-    public interface PlaceSearchPresenterListener{
-        void placeSearchReady(List<Predictions> predictions);
-    }
+//    public interface PredictionsListener {
+//        void getPredictionsList(List<Predictions> predictions);
+//    }
 
-    public PlaceSearchPresenter(PlaceSearchPresenterListener listener, Context context){
+    public PlaceSearchPresenter(PredictionsListener listener, Context context){
         this.mListener = listener;
         this.context = context;
         this.placeSearchService = new PlaceSearchService();
@@ -38,7 +35,7 @@ public class PlaceSearchPresenter {
                 if (response.isSuccessful()){
                     Prediction result = response.body();
                     if(result != null){
-                        mListener.placeSearchReady(result.getPredictions());
+                        mListener.getPredictionsList(result.getPredictions());
                     }
                 }
 
