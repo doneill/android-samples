@@ -18,10 +18,6 @@ public class PlaceSearchPresenter {
     private final PlaceSearchService placeSearchService;
 
 
-//    public interface PredictionsListener {
-//        void getPredictionsList(List<Predictions> predictions);
-//    }
-
     public PlaceSearchPresenter(PredictionsListener listener, Context context){
         this.mListener = listener;
         this.context = context;
@@ -29,7 +25,10 @@ public class PlaceSearchPresenter {
     }
 
     public void getPredictions(){
-        placeSearchService.getAPI().getPredictions(APIKEY, "Safeway", "47.498277,-121.783975", "500").enqueue(new Callback<Prediction>() {
+        placeSearchService
+                .getAPI()
+                .getPredictions(APIKEY, "Safeway", "47.498277,-121.783975", "500")
+                .enqueue(new Callback<Prediction>() {
             @Override
             public void onResponse(Call<Prediction> call, Response<Prediction> response) {
                 if (response.isSuccessful()){
