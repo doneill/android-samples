@@ -24,10 +24,10 @@ public class PlaceAutocomplete {
         this.autocompleteService = new AutocompleteService();
     }
 
-    public void getPredictions(){
+    public void getPredictions(String text){
         autocompleteService
                 .getAPI()
-                .getPredictions(APIKEY, "Safeway", "47.498277,-121.783975", "500")
+                .getPredictions(APIKEY, text, "47.498277,-121.783975", "500")
                 .enqueue(new Callback<Prediction>() {
             @Override
             public void onResponse(Call<Prediction> call, Response<Prediction> response) {
