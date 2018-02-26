@@ -7,14 +7,15 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.jdoneill.placessearch.model.Predictions;
 import com.jdoneill.placessearch.presenter.PlaceAutocomplete;
 import com.jdoneill.placessearch.presenter.PredictionsListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements PredictionsListen
 
     private PlaceAutocomplete placeAutocomplete;
     private ListView listView;
-    private ArrayAdapter<String> adapter;
+    private SimpleAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,16 +64,22 @@ public class MainActivity extends AppCompatActivity implements PredictionsListen
 
     @Override
     public void getPredictionsList(List<Predictions> predictions) {
-        List<String> place = new ArrayList<>();
-        List<String> description = new ArrayList<>();
+
+        ArrayList<HashMap<String, String>> places = new ArrayList<>();
+        HashMap<String, String> results;
 
         for(int i = 0; i < predictions.size(); i++){
-            place.add(predictions.get(i).getStructuredFormatting().getMainText());
-            description.add(predictions.get(i).getDescription());
+            results = new HashMap<>();
+            results.put("place", predictions.get(i).getStructuredFormatting().getMainText());
+            results.put("desc", predictions.get(i).getStructuredFormatting().getSecondaryText());
+            places.add(results);
         }
 
-        //Creating an array adapter for list view
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, place);
-        listView.setAdapter(adapter);
+        //Creating an simple 2 line adapter for list view
+        mAdapter = new SimpleAdapter(this, places, android.R.layout.simple_list_item_2,
+                new String[]{"place", "desc"},
+                new int[]{android.R.id.text1, android.R.id.text2});
+
+        listView.setAdapter(mAdapter);
     }
 }
