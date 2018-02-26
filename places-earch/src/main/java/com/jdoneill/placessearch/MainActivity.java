@@ -16,13 +16,14 @@ import com.jdoneill.placessearch.presenter.PredictionsListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity implements PredictionsListener {
 
     private PlaceAutocomplete placeAutocomplete;
-    ListView listView;
-    ArrayAdapter<String> adapter;
+    private ListView listView;
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
