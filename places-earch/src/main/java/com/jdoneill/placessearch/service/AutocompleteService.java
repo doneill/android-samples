@@ -15,7 +15,7 @@ import retrofit2.http.Query;
 
 
 public class AutocompleteService {
-    static final String BASE_URL = "https://maps.googleapis.com/maps/";
+    private static final String BASE_URL = "https://maps.googleapis.com/maps/";
 
     public interface AutomcompleteAPI {
 

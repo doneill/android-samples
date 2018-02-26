@@ -11,16 +11,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PlaceAutocomplete {
-    static final String APIKEY = BuildConfig.API_KEY;
+    private static final String APIKEY = BuildConfig.API_KEY;
 
-    private final Context context;
+    private final Context mContext;
     private final PredictionsListener mListener;
     private final AutocompleteService autocompleteService;
 
 
     public PlaceAutocomplete(PredictionsListener listener, Context context){
         this.mListener = listener;
-        this.context = context;
+        this.mContext = context;
         this.autocompleteService = new AutocompleteService();
     }
 
