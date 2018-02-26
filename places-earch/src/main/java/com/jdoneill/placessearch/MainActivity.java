@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity implements PredictionsListen
         listView = findViewById(R.id.lvPlaces);
 
         placeAutocomplete = new PlaceAutocomplete(this, this);
-//        placeAutocomplete.getPredictions();
 
     }
 
