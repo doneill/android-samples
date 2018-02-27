@@ -1,85 +1,93 @@
 package com.jdoneill.placessearch;
 
-import android.app.SearchManager;
-import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.jdoneill.placessearch.model.Predictions;
-import com.jdoneill.placessearch.presenter.PlaceAutocomplete;
-import com.jdoneill.placessearch.presenter.PredictionsListener;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import com.esri.arcgisruntime.mapping.ArcGISMap;
+import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.MapView;
 
 
-public class MainActivity extends AppCompatActivity implements PredictionsListener {
+public class MainActivity extends AppCompatActivity {
 
-    private PlaceAutocomplete placeAutocomplete;
-    private ListView listView;
-    private SimpleAdapter mAdapter;
+    public static final String EXTRA_LATLNG = "com.jdoneill.placesearch.LATLNG";
+
+    private MapView mMapView;
+    MenuItem mSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = findViewById(R.id.lvPlaces);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        placeAutocomplete = new PlaceAutocomplete(this, this);
+        // create MapView from layout
+        mMapView = findViewById(R.id.mapView);
+        // create a map with the BasemapType topographic
+        ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 47.498277, -121.783975, 12);
+        // set the map to be displayed in this view
+        mMapView.setMap(map);
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search, menu);
+        inflater.inflate(R.menu.map_dashboard, menu);
 
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.placeSearch).getActionView();
+        mSearch = menu.findItem(R.id.menu_search);
 
-        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                placeAutocomplete.getPredictions(newText);
-                return false;
-            }
-        });
         return true;
     }
 
     @Override
-    public void getPredictionsList(List<Predictions> predictions) {
-
-        ArrayList<HashMap<String, String>> places = new ArrayList<>();
-        HashMap<String, String> results;
-
-        for(int i = 0; i < predictions.size(); i++){
-            results = new HashMap<>();
-            results.put("place", predictions.get(i).getStructuredFormatting().getMainText());
-            results.put("desc", predictions.get(i).getStructuredFormatting().getSecondaryText());
-            places.add(results);
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch ( item.getItemId() ) {
+            case R.id.menu_search: {
+                openAutocompleteActivity();
+                return true;
+            }
         }
-
-        //Creating an simple 2 line adapter for list view
-        mAdapter = new SimpleAdapter(this, places, android.R.layout.simple_list_item_2,
-                new String[]{"place", "desc"},
-                new int[]{android.R.id.text1, android.R.id.text2});
-
-        listView.setAdapter(mAdapter);
+        return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Notification on selected place
+     */
+    private void openAutocompleteActivity() {
+        Intent intent = new Intent(this, PlaceSearchActivity.class);
+
+        intent.putExtra(EXTRA_LATLNG, "47.498277,-121.783975");
+
+        startActivity(intent);
+
+        Toast.makeText(this, "Open Auto Complete Activity", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.pause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mMapView.resume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMapView.dispose();
+    }
+
 }
