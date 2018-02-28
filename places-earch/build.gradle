@@ -27,6 +27,7 @@ android {
 
 dependencies {
     implementation "com.android.support:appcompat-v7:$andSupportLibVersion"
+    implementation "com.android.support:support-v4:$andSupportLibVersion"
     implementation "com.android.support.constraint:constraint-layout:$constraintLayoutVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
