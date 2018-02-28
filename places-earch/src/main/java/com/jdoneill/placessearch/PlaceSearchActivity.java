@@ -13,24 +13,26 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import com.jdoneill.placessearch.model.Predictions;
+import com.jdoneill.placessearch.model.Result;
 import com.jdoneill.placessearch.presenter.PlaceAutocomplete;
-import com.jdoneill.placessearch.presenter.PredictionsListener;
+import com.jdoneill.placessearch.presenter.PlacesListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class PlaceSearchActivity extends AppCompatActivity implements PredictionsListener {
+public class PlaceSearchActivity extends AppCompatActivity implements PlacesListener {
 
-    public static final String EXTRA_PLACE = "com.jdoneill.placesearch.PLACE";
+    public static final String EXTRA_PLACE_LATITUDE = "com.jdoneill.placesearch.LATITUDE";
+    public static final String EXTRA_PLACE_LONGITUDE = "com.jdoneill.placesearch.LONGITUDE";
 
-    private PlaceAutocomplete placeAutocomplete;
-    private ListView listView;
-    private SimpleAdapter adapter;
-    private String latLng;
+    private PlaceAutocomplete mPlaceAutocomplete;
+    private List<Predictions> mPredictions;
+    private ListView mPlacesListView;
+    private String mLatLng;
 
     @Override
     public void onCreate(Bundle savedInstanceState){
@@ -42,20 +44,35 @@ public class PlaceSearchActivity extends AppCompatActivity implements Prediction
 
         // get the intent
         Intent intent = getIntent();
-        latLng = intent.getStringExtra(MainActivity.EXTRA_LATLNG);
-        Toast.makeText(this, "LatLng: " + latLng, Toast.LENGTH_SHORT).show();
+        mLatLng = intent.getStringExtra(MainActivity.EXTRA_LATLNG);
 
-        listView = findViewById(R.id.lvPlaces);
+        mPlacesListView = findViewById(R.id.lvPlaces);
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mPlacesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String item = listView.getItemAtPosition(i).toString();
-                openMapView(item);
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
+                String mainText;
+                String placeId = "";
+                Object items = mPlacesListView.getItemAtPosition(pos);
+
+                if(items instanceof HashMap){
+                    HashMap<?, ?> selectedItem = (HashMap<?, ?>) items;
+
+                    Map.Entry<?, ?> item = selectedItem.entrySet().iterator().next();
+                    mainText = (String) item.getValue();
+
+                    for(int i = 0; i < mPredictions.size(); i++){
+                        if(mainText.equals(mPredictions.get(i).getStructuredFormatting().getMainText())){
+                            placeId = mPredictions.get(i).getPlaceId();
+                        }
+                    }
+
+                }
+                mPlaceAutocomplete.getResultFromPlaceId(placeId);
             }
         });
 
-        placeAutocomplete = new PlaceAutocomplete(this, this);
+        mPlaceAutocomplete = new PlaceAutocomplete(this, this);
 
     }
 
@@ -78,8 +95,8 @@ public class PlaceSearchActivity extends AppCompatActivity implements Prediction
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                listView.setVisibility(View.VISIBLE);
-                placeAutocomplete.getPredictions(newText, latLng);
+                mPlacesListView.setVisibility(View.VISIBLE);
+                mPlaceAutocomplete.getPredictions(newText, mLatLng);
                 return false;
             }
         });
@@ -89,35 +106,41 @@ public class PlaceSearchActivity extends AppCompatActivity implements Prediction
 
     @Override
     public void getPredictionsList(List<Predictions> predictions) {
+        this.mPredictions = predictions;
 
         ArrayList<HashMap<String, String>> places = new ArrayList<>();
         HashMap<String, String> results;
 
-        for(int i = 0; i < predictions.size(); i++){
+        for(int i = 0; i < mPredictions.size(); i++){
             results = new HashMap<>();
-            results.put("place", predictions.get(i).getStructuredFormatting().getMainText());
-            results.put("desc", predictions.get(i).getStructuredFormatting().getSecondaryText());
+            results.put("place", mPredictions.get(i).getStructuredFormatting().getMainText());
+            results.put("desc", mPredictions.get(i).getStructuredFormatting().getSecondaryText());
             places.add(results);
         }
 
         //Creating an simple 2 line adapter for list view
-        adapter = new SimpleAdapter(this, places, android.R.layout.simple_list_item_2,
+        SimpleAdapter adapter = new SimpleAdapter(this, places, android.R.layout.simple_list_item_2,
                 new String[]{"place", "desc"},
                 new int[]{android.R.id.text1, android.R.id.text2});
 
-        listView.setAdapter(adapter);
+        mPlacesListView.setAdapter(adapter);
+    }
+
+    @Override
+    public void getResult(Result result) {
+        double lat = result.getGeometry().getLocation().getLat();
+        double lon = result.getGeometry().getLocation().getLng();
+
+        openMapView(lat, lon);
     }
 
     /**
      * Notification on selected place
      */
-    private void openMapView(String item) {
+    private void openMapView(double lat, double lon) {
         Intent intent = new Intent(this, MainActivity.class);
-
-        intent.putExtra(EXTRA_PLACE, item);
-
+        intent.putExtra(EXTRA_PLACE_LATITUDE, lat);
+        intent.putExtra(EXTRA_PLACE_LONGITUDE, lon);
         startActivity(intent);
-
-        Toast.makeText(this, "Selected Item: " + item, Toast.LENGTH_LONG).show();
     }
 }
