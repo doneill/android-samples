@@ -1,6 +1,7 @@
 package com.jdoneill.placessearch;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +13,10 @@ import com.esri.arcgisruntime.geometry.Point;
 import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
+import com.esri.arcgisruntime.mapping.view.Graphic;
+import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
+import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -20,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_LATLNG = "com.jdoneill.placesearch.LATLNG";
 
     private MapView mMapView;
+    private GraphicsOverlay mOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +49,20 @@ public class MainActivity extends AppCompatActivity {
         ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 47.498277, -121.783975, 12);
         // set the map to be displayed in this view
         mMapView.setMap(map);
-
+        // graphics overlay for place search location marker
+        mOverlay = addGraphicsOverlay(mMapView);
+        // check if activity is returned from place search
         if(!Double.isNaN(lat) && !Double.isNaN(lon)){
+            mOverlay.getGraphics().clear();
+            // create a point from returned place search
             Point point = new Point(lon, lat, SpatialReferences.getWgs84());
+            // create a marker at search location
+            SimpleMarkerSymbol sms = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.BLACK, 15.0f);
+            Graphic graphic = new Graphic(point, sms);
+            mOverlay.getGraphics().add(graphic);
+            // zoom in to point location
             mMapView.setViewpointCenterAsync(point, 50000.0);
         }
-
     }
 
     @Override
@@ -87,6 +100,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMapView.dispose();
+    }
+
+    /**
+     * Create a Graphics Overlay
+     *
+     * @param mapView MapView to add the graphics overlay to
+     */
+    private GraphicsOverlay addGraphicsOverlay(MapView mapView){
+        //create graphics overlay
+        GraphicsOverlay graphicsOverlay = new GraphicsOverlay();
+        // add overlay to mapview
+        mapView.getGraphicsOverlays().add(graphicsOverlay);
+        return graphicsOverlay;
     }
 
     /**
