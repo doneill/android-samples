@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_LATLNG = "com.jdoneill.placesearch.LATLNG";
 
     private MapView mMapView;
-    MenuItem mSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +56,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.map_dashboard, menu);
-
-        mSearch = menu.findItem(R.id.menu_search);
 
         return true;
     }
