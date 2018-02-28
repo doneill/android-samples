@@ -7,8 +7,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.esri.arcgisruntime.geometry.Point;
+import com.esri.arcgisruntime.geometry.SpatialReferences;
 import com.esri.arcgisruntime.mapping.ArcGISMap;
 import com.esri.arcgisruntime.mapping.Basemap;
 import com.esri.arcgisruntime.mapping.view.MapView;
@@ -29,12 +30,26 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        double lat = Double.NaN;
+        double lon = Double.NaN;
+
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            lat = extras.getDouble(PlaceSearchActivity.EXTRA_PLACE_LATITUDE, Double.NaN);
+            lon = extras.getDouble(PlaceSearchActivity.EXTRA_PLACE_LONGITUDE, Double.NaN);
+        }
+
         // create MapView from layout
         mMapView = findViewById(R.id.mapView);
         // create a map with the BasemapType topographic
         ArcGISMap map = new ArcGISMap(Basemap.Type.TOPOGRAPHIC, 47.498277, -121.783975, 12);
         // set the map to be displayed in this view
         mMapView.setMap(map);
+
+        if(!Double.isNaN(lat) && !Double.isNaN(lon)){
+            Point point = new Point(lon, lat, SpatialReferences.getWgs84());
+            mMapView.setViewpointCenterAsync(point, 50000.0);
+        }
 
     }
 
@@ -52,24 +67,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch ( item.getItemId() ) {
             case R.id.menu_search: {
-                openAutocompleteActivity();
+                openPlaceSearchActivity();
                 return true;
             }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Notification on selected place
-     */
-    private void openAutocompleteActivity() {
-        Intent intent = new Intent(this, PlaceSearchActivity.class);
-
-        intent.putExtra(EXTRA_LATLNG, "47.498277,-121.783975");
-
-        startActivity(intent);
-
-        Toast.makeText(this, "Open Auto Complete Activity", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -88,6 +90,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mMapView.dispose();
+    }
+
+    /**
+     * Notification on selected place
+     */
+    private void openPlaceSearchActivity() {
+        Intent intent = new Intent(this, PlaceSearchActivity.class);
+
+        intent.putExtra(EXTRA_LATLNG, "47.498277,-121.783975");
+        startActivity(intent);
     }
 
 }
