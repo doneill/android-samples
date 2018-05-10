@@ -18,13 +18,11 @@ import com.esri.arcgisruntime.mapping.view.GraphicsOverlay;
 import com.esri.arcgisruntime.mapping.view.MapView;
 import com.esri.arcgisruntime.symbology.SimpleMarkerSymbol;
 
-
 public class MainActivity extends AppCompatActivity {
 
     public static final String EXTRA_LATLNG = "com.jdoneill.placesearch.LATLNG";
 
     private MapView mMapView;
-    private GraphicsOverlay mOverlay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +48,16 @@ public class MainActivity extends AppCompatActivity {
         // set the map to be displayed in this view
         mMapView.setMap(map);
         // graphics overlay for place search location marker
-        mOverlay = addGraphicsOverlay(mMapView);
+        GraphicsOverlay graphicsOverlay = addGraphicsOverlay(mMapView);
         // check if activity is returned from place search
         if(!Double.isNaN(lat) && !Double.isNaN(lon)){
-            mOverlay.getGraphics().clear();
+            graphicsOverlay.getGraphics().clear();
             // create a point from returned place search
             Point point = new Point(lon, lat, SpatialReferences.getWgs84());
             // create a marker at search location
             SimpleMarkerSymbol sms = new SimpleMarkerSymbol(SimpleMarkerSymbol.Style.CROSS, Color.BLACK, 15.0f);
             Graphic graphic = new Graphic(point, sms);
-            mOverlay.getGraphics().add(graphic);
+            graphicsOverlay.getGraphics().add(graphic);
             // zoom in to point location
             mMapView.setViewpointCenterAsync(point, 50000.0);
         }
