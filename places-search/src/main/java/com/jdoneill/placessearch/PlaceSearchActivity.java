@@ -49,28 +49,25 @@ public class PlaceSearchActivity extends AppCompatActivity implements PlacesList
 
         mPlacesListView = findViewById(R.id.lvPlaces);
 
-        mPlacesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long l) {
-                String mainText;
-                String placeId = "";
-                Object items = mPlacesListView.getItemAtPosition(pos);
+        mPlacesListView.setOnItemClickListener((adapterView, view, pos, l) -> {
+            String mainText;
+            String placeId = "";
+            Object items = mPlacesListView.getItemAtPosition(pos);
 
-                if(items instanceof HashMap){
-                    HashMap<?, ?> selectedItem = (HashMap<?, ?>) items;
+            if(items instanceof HashMap){
+                HashMap<?, ?> selectedItem = (HashMap<?, ?>) items;
 
-                    Map.Entry<?, ?> item = selectedItem.entrySet().iterator().next();
-                    mainText = (String) item.getValue();
+                Map.Entry<?, ?> item = selectedItem.entrySet().iterator().next();
+                mainText = (String) item.getValue();
 
-                    for(int i = 0; i < mPredictions.size(); i++){
-                        if(mainText.equals(mPredictions.get(i).getStructuredFormatting().getMainText())){
-                            placeId = mPredictions.get(i).getPlaceId();
-                        }
+                for(int i = 0; i < mPredictions.size(); i++){
+                    if(mainText.equals(mPredictions.get(i).getStructuredFormatting().getMainText())){
+                        placeId = mPredictions.get(i).getPlaceId();
                     }
-
                 }
-                mPlaceAutocomplete.getResultFromPlaceId(placeId);
+
             }
+            mPlaceAutocomplete.getResultFromPlaceId(placeId);
         });
 
         mPlaceAutocomplete = new PlaceAutocomplete(this, this);
