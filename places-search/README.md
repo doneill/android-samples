@@ -3,7 +3,7 @@ An Android app integrating Google Places REST API and ArcGIS Runtime API.
 
 ## Dependencies
 - [ArcGIS Android](https://developers.arcgis.com/android/)
-- [Google Places API](https://developers.google.com/places/android-api/start)
+- [Google Places Web](https://developers.google.com/places/web-service/intro)
 - [Retrofit](http://square.github.io/retrofit/)
 
 ## ArcGIS Runtime SDK for Android
@@ -14,7 +14,7 @@ This app supports autocomplete service in the [Google Place API for Web](https:/
 
 ```groovy
 ...
-PLACES_API_KEY = "YOUR-API-KEY"
+API_KEY = "YOUR-API-KEY"
 ```
 
 ## Licensing
