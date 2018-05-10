@@ -1,7 +1,6 @@
 package com.jdoneill.placessearch.presenter;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.jdoneill.placessearch.BuildConfig;
 import com.jdoneill.placessearch.model.PlaceDetails;
@@ -62,7 +61,6 @@ public class PlaceAutocomplete {
                 if(response.isSuccessful()){
                     PlaceDetails placeDetails = response.body();
                     if(placeDetails != null){
-                        Log.d("PLACES", "Place Detail Lat:" + placeDetails.getResult().getGeometry().getLocation().getLat());
                         mListener.getResult(placeDetails.getResult());
                     }
                 }

@@ -28,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/google_logo"
-        app:srcCompat="@mipmap/powered_by_google_on_white" />
+        app:srcCompat="@mipmap/powered_by_google_on_white"
+        android:contentDescription="@string/google_content_desc" />
 
 </LinearLayout>
