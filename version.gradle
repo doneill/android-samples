@@ -12,7 +12,7 @@ ext {
     andSupportLibVersion = '27.1.1'
     playServicesVersion = '15.0.1'
     archLifecycleVersion = '1.1.1'
-    constraintLayoutVersion = '1.1.0'
+    constraintLayoutVersion = '1.1.2'
     arcgisVersion = '100.2.1'
     playServicesVersion = '11.8.0'
     retrofitVersion = '2.3.0'
@@ -23,5 +23,5 @@ ext {
     testRunnerVersion = '1.0.2'
     espressoVersion = '3.0.2'
     // plugin versions
-    gradleVersion = '3.2.0-alpha16'
+    gradleVersion = '3.2.0-beta01'
 }
