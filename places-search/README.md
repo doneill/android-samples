@@ -1,5 +1,5 @@
 # Places Search
-An Android app integrating Google Places REST API and ArcGIS Runtime API. 
+An Android app integrating [Google Places API](https://developers.google.com/places/web-service/intro) and [ArcGIS Android Runtime API](https://developers.arcgis.com/android/). 
 
 ## Dependencies
 - [ArcGIS Android](https://developers.arcgis.com/android/)
