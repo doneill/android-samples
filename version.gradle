@@ -22,5 +22,5 @@ ext {
     testRunnerVersion = '1.0.2'
     espressoVersion = '3.0.2'
     // plugin versions
-    gradleVersion = '3.3.0-alpha12'
+    gradleVersion = '3.3.0-beta04'
 }
