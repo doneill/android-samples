@@ -1,7 +1,5 @@
 package com.jdoneill.placessearch.presenter;
 
-import android.content.Context;
-
 import com.jdoneill.placessearch.BuildConfig;
 import com.jdoneill.placessearch.model.PlaceDetails;
 import com.jdoneill.placessearch.model.Prediction;
@@ -13,15 +11,13 @@ import retrofit2.Response;
 
 public class PlaceAutocomplete {
     private static final String APIKEY = BuildConfig.API_KEY;
-
-    private final Context mContext;
+    
     private final PlacesListener mListener;
     private final PlaceService placeService;
 
 
-    public PlaceAutocomplete(PlacesListener listener, Context context){
+    public PlaceAutocomplete(PlacesListener listener){
         this.mListener = listener;
-        this.mContext = context;
         this.placeService = new PlaceService();
     }
 

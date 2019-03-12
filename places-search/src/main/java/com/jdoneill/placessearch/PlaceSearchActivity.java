@@ -69,7 +69,7 @@ public class PlaceSearchActivity extends AppCompatActivity implements PlacesList
             mPlaceAutocomplete.getResultFromPlaceId(placeId);
         });
 
-        mPlaceAutocomplete = new PlaceAutocomplete(this, this);
+        mPlaceAutocomplete = new PlaceAutocomplete(this);
 
     }
 
